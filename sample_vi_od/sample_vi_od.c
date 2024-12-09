@@ -118,7 +118,7 @@ void *run_tdl_thread(void *args) {
 
     unsigned long execution_time = ((t1.tv_sec - t0.tv_sec) * 1000000 + t1.tv_usec - t0.tv_usec);
     if (counter++ % 5 == 0)
-      printf("obj count: %d, take %.2f,width:%u ms\n", stObjMeta.size, (float)execution_time / 1000,
+      printf("obj count: %d, take %.2f ms, width:%u\n", stObjMeta.size, (float)execution_time / 1000,
              stFrame.stVFrame.u32Width);
 
     {
