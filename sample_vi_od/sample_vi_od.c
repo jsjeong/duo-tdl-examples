@@ -297,18 +297,20 @@ static void SampleHandleSig(CVI_S32 signo) {
 
 int main(int argc, char *argv[]) {
   if (argc != 4 && argc != 3) {
-    printf(
-        "\nUsage: %s MODEL_NAME MODEL_PATH [THRESHOLD]\n\n"
-        "\tMODEL_NAME, detection model name should be one of {mobiledetv2-person-vehicle, "
-        "mobiledetv2-person-pets, "
-        "mobiledetv2-coco80, "
-        "mobiledetv2-vehicle, "
-        "mobiledetv2-pedestrian, "
-        "yolov8-person-pets, "
-        "yolov3, yolox}\n"
-        "\tMODEL_PATH, cvimodel path\n"
-        "\tTHRESHOLD (optional), threshold for detection model (default: 0.5)\n",
-        argv[0]);
+    printf("sample_vi_od - Object detection sample\n\n");
+    printf("Usage: %s MODEL_NAME MODEL_PATH [THRESHOLD]\n\n", argv[0]);
+    printf("MODEL_NAME:\n"
+           "\tmobiledetv2-person-vehicle  Person and vehicle detection (mobiledetv2)\n"
+           "\tmobiledetv2-person-pets     Person, cat and dog detection (mobiledetv2)\n"
+           "\tmobiledetv2-coco80          Coco 80 objects detection (mobiledetv2)\n"
+           "\tmobiledetv2-vehicle         Vehicle detection (mobiledetv2)\n"
+           "\tmobiledetv2-pedestrian      Pedestrian detection (mobiledetv2)\n"
+           "\tyolov8-person-pets          Person, cat and dog detection (yolov8)\n"
+           "\tyolov3\n"
+           "\tyolox\n\n");
+    printf("MODEL_PATH: cvimodel path\n\n");
+    printf("THRESHOLD: (optional) threshold for detection model (default: 0.5)\n\n");
+
     return -1;
   }
 
