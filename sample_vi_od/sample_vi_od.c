@@ -68,13 +68,13 @@ void *run_venc(void *args) {
       for (uint32_t oid = 0; oid < stObjMeta.size; oid++) {
         char name[256];
         if (stObjMeta.info[oid].classes == 0) {
-          sprintf(name, "cat: %.2f",stObjMeta.info[oid].bbox.score);
+          sprintf(name, "cat: %.2f", stObjMeta.info[oid].bbox.score);
         }
         if (stObjMeta.info[oid].classes == 1) {
-          sprintf(name, "dog: %.2f",stObjMeta.info[oid].bbox.score);
+          sprintf(name, "dog: %.2f", stObjMeta.info[oid].bbox.score);
         }
         if (stObjMeta.info[oid].classes == 2) {
-          sprintf(name, "person: %.2f",stObjMeta.info[oid].bbox.score);
+          sprintf(name, "person: %.2f", stObjMeta.info[oid].bbox.score);
         }
         memcpy(stObjMeta.info[oid].name, name, sizeof(stObjMeta.info[oid].name));
       }
@@ -134,8 +134,11 @@ void *run_tdl_thread(void *args) {
     }
 
     if(pstTDLArgs->enOdModelId == CVI_TDL_SUPPORTED_MODEL_PERSON_PETS_DETECTION) {
+      uint32_t obj_id;
       for (uint32_t oid = 0; oid < stObjMeta.size; oid++) {
-        printf("%.2f %.2f %.2f %.2f %d %.2f\n",
+        obj_id = stObjMeta.info[oid].classes;
+        printf("%-7s %.2f %.2f %.2f %.2f %d %.2f\n",
+                obj_id == 0 ? "cat:" : (obj_id == 1 ? "dog:" : (obj_id == 2 ? "person:" : "")),
                 stObjMeta.info[oid].bbox.x1, stObjMeta.info[oid].bbox.y1,
                 stObjMeta.info[oid].bbox.x2, stObjMeta.info[oid].bbox.y2,
                 stObjMeta.info[oid].classes, stObjMeta.info[oid].bbox.score);
