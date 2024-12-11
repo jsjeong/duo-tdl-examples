@@ -17,6 +17,8 @@ CVI_S32 get_od_model_info(const char *model_name, CVI_TDL_SUPPORTED_MODEL_E *mod
     *model_index = CVI_TDL_SUPPORTED_MODEL_MOBILEDETV2_PEDESTRIAN;
   } else if (strcmp(model_name, "yolov3") == 0) {
     *model_index = CVI_TDL_SUPPORTED_MODEL_YOLOV3;
+  } else if (strcmp(model_name, "person-pets-detection") == 0) {
+    *model_index = CVI_TDL_SUPPORTED_MODEL_PERSON_PETS_DETECTION;
   } else if (strcmp(model_name, "yolox") == 0) {
     *model_index = CVI_TDL_SUPPORTED_MODEL_YOLOX;
   } else {
@@ -37,6 +39,8 @@ CVI_S32 get_pd_model_info(const char *model_name, CVI_TDL_SUPPORTED_MODEL_E *mod
     *model_index = CVI_TDL_SUPPORTED_MODEL_MOBILEDETV2_COCO80;
   } else if (strcmp(model_name, "mobiledetv2-pedestrian") == 0) {
     *model_index = CVI_TDL_SUPPORTED_MODEL_MOBILEDETV2_PEDESTRIAN;
+  } else if (strcmp(model_name, "person-pets-detection") == 0) {
+    *model_index = CVI_TDL_SUPPORTED_MODEL_PERSON_PETS_DETECTION;
   } else if (strcmp(model_name, "yolov3") == 0) {
     *model_index = CVI_TDL_SUPPORTED_MODEL_YOLOV3;
   } else if (strcmp(model_name, "yolox") == 0) {
@@ -59,6 +63,8 @@ CVI_S32 get_vehicle_model_info(const char *model_name, CVI_TDL_SUPPORTED_MODEL_E
     *model_index = CVI_TDL_SUPPORTED_MODEL_MOBILEDETV2_VEHICLE;
   } else if (strcmp(model_name, "yolov3") == 0) {
     *model_index = CVI_TDL_SUPPORTED_MODEL_YOLOV3;
+  } else if (strcmp(model_name, "person-pets-detection") == 0) {
+    *model_index = CVI_TDL_SUPPORTED_MODEL_PERSON_PETS_DETECTION;
   } else if (strcmp(model_name, "yolox") == 0) {
     *model_index = CVI_TDL_SUPPORTED_MODEL_YOLOX;
   } else {

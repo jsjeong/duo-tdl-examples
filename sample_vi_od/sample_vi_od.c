@@ -30,6 +30,7 @@ MUTEXAUTOLOCK_INIT(ResultMutex);
  */
 typedef struct {
   SAMPLE_TDL_MW_CONTEXT *pstMWContext;
+  CVI_TDL_SUPPORTED_MODEL_E enOdModelId;
   cvitdl_service_handle_t stServiceHandle;
 } SAMPLE_TDL_VENC_THREAD_ARG_S;
 
@@ -63,10 +64,35 @@ void *run_venc(void *args) {
       CVI_TDL_CopyObjectMeta(&g_stObjMeta, &stObjMeta);
     }
 
+if(pstArgs->enOdModelId == CVI_TDL_SUPPORTED_MODEL_PERSON_PETS_DETECTION)
+{
     for (uint32_t oid = 0; oid < stObjMeta.size; oid++) {
       char name[256];
-      sprintf(name, "%s: %.2f", stObjMeta.info[oid].name, stObjMeta.info[oid].bbox.score);
+      if (stObjMeta.info[oid].classes == 0)
+      {
+        sprintf(name, "cat: %.2f",stObjMeta.info[oid].bbox.score);
+      }
+      if (stObjMeta.info[oid].classes == 1)
+      {
+        sprintf(name, "dog: %.2f",stObjMeta.info[oid].bbox.score);
+      }
+      if (stObjMeta.info[oid].classes == 2)
+      {
+        sprintf(name, "person: %.2f",stObjMeta.info[oid].bbox.score);
+      }
       memcpy(stObjMeta.info[oid].name, name, sizeof(stObjMeta.info[oid].name));
+    }
+
+}
+
+       
+else {
+  
+    for (uint32_t oid = 0; oid < stObjMeta.size; oid++) {
+     char name[256];
+     sprintf(name, "%s: %.2f", stObjMeta.info[oid].name, stObjMeta.info[oid].bbox.score);
+     memcpy(stObjMeta.info[oid].name, name, sizeof(stObjMeta.info[oid].name));
+    }
     }
 
     s32Ret = CVI_TDL_Service_ObjectDrawRect(pstArgs->stServiceHandle, &stObjMeta, &stFrame, true,
@@ -105,21 +131,46 @@ void *run_tdl_thread(void *args) {
       goto get_frame_failed;
     }
 
-    struct timeval t0, t1;
-    gettimeofday(&t0, NULL);
-    s32Ret = pstTDLArgs->inference_func(pstTDLArgs->stTDLHandle, &stFrame, pstTDLArgs->enOdModelId,
-                                        &stObjMeta);
-    gettimeofday(&t1, NULL);
+ 
+   
+  
+    //
 
-    if (s32Ret != CVI_TDL_SUCCESS) {
-      printf("inference failed!, ret=%x\n", s32Ret);
+ // }
+
+struct timeval t0, t1;
+    gettimeofday(&t0, NULL);
+   s32Ret = pstTDLArgs->inference_func(pstTDLArgs->stTDLHandle, &stFrame, pstTDLArgs->enOdModelId,
+                                        &stObjMeta);
+   gettimeofday(&t1, NULL);
+
+   if (s32Ret != CVI_TDL_SUCCESS) {
+     printf("inference failed!, ret=%x\n", s32Ret);
       goto inf_error;
+   }
+       
+   if(pstTDLArgs->enOdModelId == CVI_TDL_SUPPORTED_MODEL_PERSON_PETS_DETECTION)
+   {
+    for (uint32_t oid = 0; oid < stObjMeta.size; oid++) {
+      printf(" %.2f %.2f %.2f %.2f %d %.2f\n",  
+               stObjMeta.info[oid].bbox.x1, stObjMeta.info[oid].bbox.y1, stObjMeta.info[oid].bbox.x2, stObjMeta.info[oid].bbox.y2, stObjMeta.info[oid].classes,
+               stObjMeta.info[oid].bbox.score);
     }
+   }
+else {
+
 
     unsigned long execution_time = ((t1.tv_sec - t0.tv_sec) * 1000000 + t1.tv_usec - t0.tv_usec);
     if (counter++ % 5 == 0)
       printf("obj count: %d, take %.2f ms, width:%u\n", stObjMeta.size, (float)execution_time / 1000,
-             stFrame.stVFrame.u32Width);
+            stFrame.stVFrame.u32Width);
+
+
+}
+
+
+
+ 
 
     {
       // Copy object detection results to global.
@@ -278,6 +329,7 @@ int main(int argc, char *argv[]) {
         "mobiledetv2-coco80, "
         "mobiledetv2-vehicle, "
         "mobiledetv2-pedestrian, "
+        "person-pets-detection,"
         "yolov3, yolox}\n"
         "\tMODEL_PATH, cvimodel path\n"
         "\tTHRESHOLD (optional), threshold for detection model (default: 0.5)\n",
@@ -360,6 +412,7 @@ int main(int argc, char *argv[]) {
   SAMPLE_TDL_VENC_THREAD_ARG_S venc_args = {
       .pstMWContext = &stMWContext,
       .stServiceHandle = stServiceHandle,
+      .enOdModelId = enOdModelId,
   };
 
   SAMPLE_TDL_TDL_THREAD_ARG_S ai_args = {
