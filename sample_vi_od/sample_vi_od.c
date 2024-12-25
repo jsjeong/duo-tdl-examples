@@ -205,8 +205,13 @@ CVI_S32 get_middleware_config(SAMPLE_TDL_MW_CONFIG_S *pstMWConfig) {
 
   // Setup frame size of video encoder to 1080p
   SIZE_S stVencSize = {
+#ifdef CV180X
+      .u32Width = 1280,
+      .u32Height = 720,
+#else
       .u32Width = 1920,
       .u32Height = 1080,
+#endif
   };
 
   // VBPool configurations
@@ -215,7 +220,11 @@ CVI_S32 get_middleware_config(SAMPLE_TDL_MW_CONFIG_S *pstMWConfig) {
 
   // VBPool 0 for VI
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[0].enFormat = VI_PIXEL_FORMAT;
+#ifdef CV180X
+  pstMWConfig->stVBPoolConfig.astVBPoolSetup[0].u32BlkCount = 2;
+#else
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[0].u32BlkCount = 3;
+#endif
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[0].u32Height = stSensorSize.u32Height;
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[0].u32Width = stSensorSize.u32Width;
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[0].bBind = true;
@@ -224,7 +233,11 @@ CVI_S32 get_middleware_config(SAMPLE_TDL_MW_CONFIG_S *pstMWConfig) {
 
   // VBPool 1 for TDL frame
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[1].enFormat = VI_PIXEL_FORMAT;
+#ifdef CV180X
+  pstMWConfig->stVBPoolConfig.astVBPoolSetup[1].u32BlkCount = 2;
+#else
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[1].u32BlkCount = 3;
+#endif
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[1].u32Height = stVencSize.u32Height;
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[1].u32Width = stVencSize.u32Width;
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[1].bBind = true;
@@ -238,8 +251,13 @@ CVI_S32 get_middleware_config(SAMPLE_TDL_MW_CONFIG_S *pstMWConfig) {
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[2].u32BlkCount = 1;
   // Considering the maximum input size of object detection model is 1024x768, we set same size
   // here.
+#ifdef CV180X
+  pstMWConfig->stVBPoolConfig.astVBPoolSetup[2].u32Height = 256;
+  pstMWConfig->stVBPoolConfig.astVBPoolSetup[2].u32Width = 384;
+#else
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[2].u32Height = 768;
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[2].u32Width = 1024;
+#endif
   // Don't bind with VPSS here, TDL SDK would bind this pool automatically when user assign this
   // pool through CVI_TDL_SetVBPool.
   pstMWConfig->stVBPoolConfig.astVBPoolSetup[2].bBind = false;

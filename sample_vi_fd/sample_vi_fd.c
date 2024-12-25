@@ -142,8 +142,8 @@ static void SampleHandleSig(CVI_S32 signo) {
 int main(int argc, char *argv[]) {
   if (argc != 2) {
     printf(
-        "\nUsage: %s RETINA_MODEL_PATH.\n\n"
-        "\tRETINA_MODEL_PATH, path to retinaface model.\n",
+        "\nUsage: %s SCRFDFACE_MODEL_PATH.\n\n"
+        "\tSCRFDFACE_MODEL_PATH, path to scrfdface model.\n",
         argv[0]);
     return CVI_TDL_FAILURE;
   }
@@ -185,7 +185,11 @@ int main(int argc, char *argv[]) {
 
   // VBPool 0 for VPSS Grp0 Chn0
   stMWConfig.stVBPoolConfig.astVBPoolSetup[0].enFormat = VI_PIXEL_FORMAT;
+#ifdef CV180X
+  stMWConfig.stVBPoolConfig.astVBPoolSetup[0].u32BlkCount = 2;
+#else
   stMWConfig.stVBPoolConfig.astVBPoolSetup[0].u32BlkCount = 5;
+#endif
   stMWConfig.stVBPoolConfig.astVBPoolSetup[0].u32Height = stSensorSize.u32Height;
   stMWConfig.stVBPoolConfig.astVBPoolSetup[0].u32Width = stSensorSize.u32Width;
   stMWConfig.stVBPoolConfig.astVBPoolSetup[0].bBind = true;
@@ -194,7 +198,11 @@ int main(int argc, char *argv[]) {
 
   // VBPool 1 for VPSS Grp0 Chn1
   stMWConfig.stVBPoolConfig.astVBPoolSetup[1].enFormat = VI_PIXEL_FORMAT;
+#ifdef CV180X
+  stMWConfig.stVBPoolConfig.astVBPoolSetup[1].u32BlkCount = 2;
+#else
   stMWConfig.stVBPoolConfig.astVBPoolSetup[1].u32BlkCount = 5;
+#endif
   stMWConfig.stVBPoolConfig.astVBPoolSetup[1].u32Height = stVencSize.u32Height;
   stMWConfig.stVBPoolConfig.astVBPoolSetup[1].u32Width = stVencSize.u32Width;
   stMWConfig.stVBPoolConfig.astVBPoolSetup[1].bBind = true;
@@ -203,9 +211,15 @@ int main(int argc, char *argv[]) {
 
   // VBPool 2 for TDL preprocessing
   stMWConfig.stVBPoolConfig.astVBPoolSetup[2].enFormat = PIXEL_FORMAT_BGR_888_PLANAR;
+#ifdef CV180X
+  stMWConfig.stVBPoolConfig.astVBPoolSetup[2].u32BlkCount = 1;
+  stMWConfig.stVBPoolConfig.astVBPoolSetup[2].u32Height = 256;
+  stMWConfig.stVBPoolConfig.astVBPoolSetup[2].u32Width = 320;
+#else
   stMWConfig.stVBPoolConfig.astVBPoolSetup[2].u32BlkCount = 3;
   stMWConfig.stVBPoolConfig.astVBPoolSetup[2].u32Height = 720;
   stMWConfig.stVBPoolConfig.astVBPoolSetup[2].u32Width = 1280;
+#endif
   stMWConfig.stVBPoolConfig.astVBPoolSetup[2].bBind = false;
 
   // Setup VPSS Grp0
